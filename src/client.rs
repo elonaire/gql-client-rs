@@ -34,9 +34,11 @@ impl GQLClient {
 
   #[cfg(not(target_arch = "wasm32"))]
   fn client(&self) -> Result<Client, GraphQLError> {
-    let mut builder = Client::builder().timeout(std::time::Duration::from_secs(
-      self.config.timeout.unwrap_or(5),
-    ));
+    let mut builder = Client::builder()
+      .cookie_store(true)
+      .timeout(std::time::Duration::from_secs(
+        self.config.timeout.unwrap_or(5),
+      ));
     if let Some(proxy) = &self.config.proxy {
       builder = builder.proxy(proxy.clone().try_into()?);
     }
